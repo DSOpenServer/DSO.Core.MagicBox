@@ -735,12 +735,12 @@ namespace DSO.Core.MagicBox
             _columnsCollection = columnsCollection;
         }
 
-        public void AddRow<T>(T entity) where T : class
+        public void AddRow<T>(T entity)
         {
             AddRowImpl(entity);
         }
 
-        public void AddRowRange<T>(IEnumerable<T> entitys) where T : class
+        public void AddRowRange<T>(IEnumerable<T> entitys)
         {
             foreach (var item in entitys)
             {
@@ -748,28 +748,35 @@ namespace DSO.Core.MagicBox
             }
         }
 
-        private void AddRowImpl<T>(T entity) where T : class
+        private void AddRowImpl<T>(T entity)
         {
             var row = new DDRow(_columnsCollection);
 
-            var entitydelegearry = entity.ToDelegateArray(out var ColumnTypes, out var entityColumn);
-
-            if (!_columnsCollection.Any())
+            if (_columnsCollection.ColumnBehaviour == ColumnBehaviour.StrongType)
             {
-                for (int i = 0; i < entityColumn.Length; i++)
+                var entitydelegearry = entity.ToDelegateArray<T>(out var ColumnTypes, out var entityColumn);
+
+                if (!_columnsCollection.Any())
                 {
-                    _columnsCollection.AddColumn(entityColumn[i], ColumnTypes[i]);
+                    for (int i = 0; i < entityColumn.Length; i++)
+                    {
+                        _columnsCollection.AddColumn(entityColumn[i], ColumnTypes[i]);
+                    }
+                }
+
+                for (int i = 0; i < _columnsCollection.Count; i++)
+                {
+                    if (!row.StrongTypeCheckOrSet(ColumnTypes[i], i, out var msgin))
+                    {
+                        throw new Exception(msgin);
+                    }
+
+                    row.SetDelegate(i, entitydelegearry[i]);
                 }
             }
-
-            for (int i = 0; i < _columnsCollection.Count; i++)
+            else
             {
-                if (!row.StrongTypeCheckOrSet(ColumnTypes[i], i, out var msgin))
-                {
-                    throw new Exception(msgin);
-                }
-
-                row.SetDelegate(i, entitydelegearry[i]);
+                row.Set(entity);
             }
 
             AddRow(row);
