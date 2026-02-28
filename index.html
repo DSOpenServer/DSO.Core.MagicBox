@@ -1,545 +1,297 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
-  <title>DSO.Core.MagicBox — Dokümantasyon</title>
-  <meta name="description" content="MagicBox: zero-arg Func<T> hücreleriyle high-performance typed value container + DDContainer/DDTable/DDRow tablo soyutlaması. DynamicInvoke yok, tip-güvenli okuma." />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>DSO.Core.MagicBox — Dokümantasyon</title>
 
-  <style>
-    :root{
-      --bg: #0b1220;
-      --panel: rgba(255,255,255,.06);
-      --panel-2: rgba(255,255,255,.09);
-      --text: rgba(255,255,255,.90);
-      --muted: rgba(255,255,255,.66);
-      --muted2: rgba(255,255,255,.50);
-      --border: rgba(255,255,255,.12);
+<style>
+:root{
+  --bg:#0f172a;
+  --panel:#111827;
+  --panel-2:#1f2937;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --border:#2d3748;
 
-      /* StringPro tarzı kurumsal vurgu */
-      --brand: #2b7cff;     /* kurumsal mavi */
-      --brand2:#20c997;     /* aksiyon/başarı yeşili */
-      --warn: #fbbf24;
+  --brand:#2b7cff;
+  --brand2:#20c997;
 
-      --shadow: 0 14px 40px rgba(0,0,0,.35);
-      --radius: 18px;
-      --radius2: 28px;
+  --radius:16px;
+  --radius2:24px;
 
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      --maxw: 1100px;
-    }
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  --maxw:1100px;
+}
 
-    @media (prefers-color-scheme: light){
-      :root{
-        --bg:#f6f8ff;
-        --panel: rgba(0,0,0,.05);
-        --panel-2: rgba(0,0,0,.07);
-        --text: rgba(0,0,0,.90);
-        --muted: rgba(0,0,0,.64);
-        --muted2: rgba(0,0,0,.50);
-        --border: rgba(0,0,0,.10);
-        --shadow: 0 14px 40px rgba(15, 23, 42, .12);
-      }
-    }
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f3f4f6;
+    --panel:#ffffff;
+    --panel-2:#f9fafb;
+    --text:#111827;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+  }
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--text);
-      background:
-        radial-gradient(1100px 600px at 15% 10%, rgba(43,124,255,.22), transparent 60%),
-        radial-gradient(900px 520px at 85% 15%, rgba(32,201,151,.14), transparent 55%),
-        radial-gradient(900px 700px at 55% 95%, rgba(43,124,255,.10), transparent 60%),
-        var(--bg);
-      line-height:1.55;
-    }
-    a{color:inherit;text-decoration:none}
-    a:hover{text-decoration:underline}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
 
-    .wrap{max-width:var(--maxw); margin:0 auto; padding:26px 18px 80px;}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
 
-    /* Topbar */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding: 14px 14px;
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    .brandline{display:flex;align-items:center;gap:12px;min-width:260px}
-    .logos{display:flex;align-items:center;gap:10px}
-    .logo{
-      width:38px;height:38px;border-radius:12px;overflow:hidden;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.08);
-      display:grid;place-items:center;
-      flex: 0 0 auto;
-    }
-    .logo img{width:100%;height:100%;object-fit:cover;display:block}
-    .brandtext{display:flex;flex-direction:column;gap:1px;line-height:1.1}
-    .brandtext .title{font-weight:760;letter-spacing:.2px}
-    .brandtext .sub{font-size:12.5px;color:var(--muted)}
-    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      font-size: 13px;
-      user-select:none;
-      transition: transform .12s ease, background .12s ease;
-    }
-    .chip:hover{background: rgba(255,255,255,.08); transform: translateY(-1px); text-decoration:none}
+.wrap{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:32px 20px 80px;
+}
 
-    /* Hero */
-    .hero{
-      margin-top:18px;
-      border-radius: var(--radius2);
-      border: 1px solid var(--border);
-      background:
-        linear-gradient(135deg, rgba(43,124,255,.18), rgba(32,201,151,.12)),
-        rgba(255,255,255,.05);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position: relative;
-    }
-    .hero::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(900px 500px at 25% 25%, rgba(255,255,255,.09), transparent 60%),
-        radial-gradient(700px 450px at 70% 30%, rgba(255,255,255,.06), transparent 55%);
-      pointer-events:none;
-    }
-    .hero-inner{
-      position:relative;
-      padding: 26px 22px 22px;
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-      align-items:start;
-    }
-    @media (max-width: 900px){
-      .hero-inner{grid-template-columns:1fr}
-    }
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  border:1px solid var(--border);
+  border-radius:var(--radius2);
+  background:var(--panel);
+  margin-bottom:20px;
+}
 
-    .tag{
-      display:inline-flex;gap:8px;align-items:center;
-      padding: 7px 10px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      font-size: 12.5px;
-    }
-    .h1{
-      font-size: clamp(26px, 3.2vw, 40px);
-      margin: 10px 0 10px;
-      line-height:1.15;
-      letter-spacing: -.2px;
-      font-weight: 820;
-    }
-    .lead{
-      color: var(--muted);
-      font-size: 15.5px;
-      margin: 0 0 16px;
-      max-width: 62ch;
-      line-height:1.7;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
 
-    .cta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      padding: 11px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.07);
-      color: var(--text);
-      font-weight: 650;
-      font-size: 14px;
-      transition: transform .12s ease, background .12s ease;
-    }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10); text-decoration:none}
-    .btn.primary{
-      border-color: rgba(43,124,255,.45);
-      background: linear-gradient(180deg, rgba(43,124,255,.36), rgba(43,124,255,.16));
-    }
-    .btn.green{
-      border-color: rgba(32,201,151,.40);
-      background: linear-gradient(180deg, rgba(32,201,151,.30), rgba(32,201,151,.13));
-    }
+.brand img{
+  width:38px;
+  height:38px;
+  border-radius:8px;
+}
 
-    .card{
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      border-radius: var(--radius);
-      padding: 14px;
-    }
-    .card h3{
-      margin: 0 0 8px;
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 740;
-      letter-spacing: .2px;
-      text-transform: uppercase;
-    }
+.brand-text{
+  display:flex;
+  flex-direction:column;
+}
 
-    .kv{display:grid; grid-template-columns: 120px 1fr; gap:8px 10px; align-items:center; font-size: 13.5px;}
-    .k{color:var(--muted2)}
-    .v{color:var(--text)}
-    .v code{font-family:var(--mono);font-size:12.5px}
+.brand-text strong{
+  font-size:14px;
+}
 
-    .note{
-      margin-top:12px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px dashed rgba(255,255,255,.22);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      font-size: 13.5px;
-    }
-    @media (prefers-color-scheme: light){
-      .note{border-color: rgba(0,0,0,.18)}
-    }
+.brand-text span{
+  font-size:12px;
+  color:var(--muted);
+}
 
-    /* Sections */
-    .grid{
-      margin-top: 18px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-    }
-    @media (max-width: 900px){ .grid{grid-template-columns: 1fr} }
+.nav{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
 
-    .section{
-      margin-top: 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius2);
-      background: rgba(255,255,255,.04);
-      padding: 18px;
-      box-shadow: 0 10px 28px rgba(0,0,0,.18);
-    }
-    .section h2{
-      margin: 0 0 10px;
-      font-size: 18px;
-      letter-spacing: -.2px;
-    }
-    .section p{
-      margin: 0 0 10px;
-      color: var(--muted);
-      font-size: 14.5px;
-      line-height:1.7;
-    }
-    .bullets{margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 14.5px;}
-    .bullets li{margin: 6px 0;}
-    code, pre{font-family:var(--mono)}
-    pre{
-      margin: 12px 0 0;
-      padding: 14px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,.22);
-      overflow:auto;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
-    }
-    @media (prefers-color-scheme: light){
-      pre{background: rgba(0,0,0,.06)}
-    }
-    pre code{font-size:13px; line-height:1.55}
+.nav a{
+  font-size:13px;
+  color:var(--muted);
+}
 
-    .callout{
-      margin-top:12px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(251,191,36,.28);
-      background: rgba(251,191,36,.08);
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height:1.6;
-    }
-    .callout strong{color:var(--text)}
+.nav a:hover{
+  color:var(--text);
+}
 
-    /* Wordmark */
-    .wordmark{display:flex;align-items:center;gap:10px}
-    .wordmark svg{width:170px;height:auto}
-    .hint{font-size:11px;color:var(--muted2);margin-top:6px}
+.hero{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius2);
+  padding:28px;
+  margin-bottom:20px;
+}
 
-    /* Footer */
-    footer{
-      margin-top: 18px;
-      color: var(--muted2);
-      font-size: 13px;
-      display:flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items:center;
-      gap:10px;
-      padding: 0 6px;
-    }
-  </style>
+.hero h1{
+  margin:0 0 12px;
+  font-size:34px;
+}
+
+.hero p{
+  margin:0 0 18px;
+  color:var(--muted);
+}
+
+.buttons{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:10px 16px;
+  border-radius:10px;
+  font-size:14px;
+  border:1px solid var(--border);
+  background:var(--panel-2);
+  color:var(--text);
+}
+
+.btn.primary{
+  background:var(--brand);
+  color:white;
+  border:none;
+}
+
+.btn.secondary{
+  background:var(--brand2);
+  color:white;
+  border:none;
+}
+
+.section{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius2);
+  padding:24px;
+  margin-bottom:20px;
+}
+
+.section h2{
+  margin:0 0 14px;
+  font-size:20px;
+}
+
+.section p{
+  color:var(--muted);
+}
+
+ul{
+  margin:12px 0 0 20px;
+  color:var(--muted);
+}
+
+pre{
+  margin-top:14px;
+  padding:14px;
+  border-radius:12px;
+  background:var(--panel-2);
+  border:1px solid var(--border);
+  overflow:auto;
+}
+
+code{
+  font-family:var(--mono);
+  font-size:13px;
+}
+
+.footer{
+  margin-top:30px;
+  font-size:13px;
+  color:var(--muted);
+  text-align:center;
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header class="topbar">
-      <div class="brandline">
-        <div class="logos">
-          <!-- DSOpenServer org avatar -->
-          <a class="logo" href="https://github.com/DSOpenServer" title="DSOpenServer" aria-label="DSOpenServer">
-            <img alt="DSOpenServer logo" src="https://avatars.githubusercontent.com/u/230051382?s=200&v=4" />
-          </a>
-          <!-- DokuzSistem: inline wordmark (istersen gerçek logo img ile değiştir) -->
-          <div class="logo" title="DokuzSistem" aria-label="DokuzSistem" style="padding:6px">
-            <svg viewBox="0 0 200 60" role="img" aria-label="DokuzSistem">
-              <defs>
-                <linearGradient id="dsG" x1="0" x2="1">
-                  <stop offset="0" stop-color="#2b7cff"/>
-                  <stop offset="1" stop-color="#20c997"/>
-                </linearGradient>
-              </defs>
-              <rect x="0" y="0" width="200" height="60" rx="14" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.10)"/>
-              <circle cx="28" cy="30" r="14" fill="url(#dsG)"/>
-              <text x="52" y="37" font-family="ui-sans-serif,system-ui" font-size="18" font-weight="800" fill="rgba(255,255,255,.92)">DokuzSistem</text>
-            </svg>
-          </div>
-        </div>
 
-        <div class="brandtext">
-          <div class="title">DSO.Core.MagicBox</div>
-          <div class="sub">DokuzSistem • DSOpenServer Ekosistemi • .NET / C#</div>
-        </div>
-      </div>
+<div class="wrap">
 
-      <nav class="nav" aria-label="Sayfa kısayolları">
-        <a class="chip" href="#overview">Genel Bakış</a>
-        <a class="chip" href="#install">Kurulum</a>
-        <a class="chip" href="#usage">Kullanım</a>
-        <a class="chip" href="#dd">DD Modeli</a>
-        <a class="chip" href="#api">API</a>
-        <a class="chip" href="#contrib">Katkı</a>
-      </nav>
-    </header>
+<header class="topbar">
+  <div class="brand">
+    <img src="https://avatars.githubusercontent.com/u/230051382?s=200&v=4" alt="DSOpenServer">
+    <div class="brand-text">
+      <strong>DSO.Core.MagicBox</strong>
+      <span>DokuzSistem • DSOpenServer</span>
+    </div>
+  </div>
+  <nav class="nav">
+    <a href="#overview">Genel</a>
+    <a href="#install">Kurulum</a>
+    <a href="#usage">Kullanım</a>
+    <a href="#dd">DD Modeli</a>
+    <a href="#api">API</a>
+  </nav>
+</header>
 
-    <section class="hero" id="top">
-      <div class="hero-inner">
-        <div>
-          <div class="tag">DSOpenServer • Core Utilities • Typed Container</div>
-          <h1 class="h1">Typed Value Container + Hafif Tablo Modeli</h1>
-          <p class="lead">
-            <b>MagicBox</b>, değerleri <b>sıfır parametreli <code>Func&lt;T&gt;</code> hücreleri</b> olarak tutar ve
-            <b>DynamicInvoke kullanmadan</b> tip-güvenli okuma sunar.
-            Üzerine kurulu <b>DDContainer → DDTable → DDRow</b> katmanı ile “satır/tablolaştırma” ihtiyaçlarına hafif bir çekirdek sağlar.
-          </p>
+<section class="hero">
+  <h1>MagicBox</h1>
+  <p>
+    MagicBox, değerleri <strong>zero-arg Func&lt;T&gt;</strong> hücreleri olarak tutan,
+    <strong>DynamicInvoke kullanmadan</strong> tip-güvenli okuma sağlayan performans odaklı bir mini konteynerdir.
+    Üzerine inşa edilmiş hafif <strong>DDContainer → DDTable → DDRow</strong> modeli içerir.
+  </p>
 
-          <div class="cta">
-            <a class="btn primary" href="https://github.com/DSOpenServer/DSO.Core.MagicBox" target="_blank" rel="noopener">GitHub Repository</a>
-            <a class="btn green" href="#usage">Hızlı Başlangıç</a>
-            <a class="btn" href="https://github.com/orgs/DSOpenServer/repositories" target="_blank" rel="noopener">Diğer DSOpenServer repoları</a>
-          </div>
+  <div class="buttons">
+    <a class="btn primary" href="https://github.com/DSOpenServer/DSO.Core.MagicBox" target="_blank">GitHub Repo</a>
+    <a class="btn secondary" href="#usage">Hızlı Başlangıç</a>
+  </div>
+</section>
 
-          <div class="note">
-            <b>Not:</b> Varsayılan sınıflar thread-safe değildir; tek thread veya dış senkronizasyon varsayılır.
-          </div>
-        </div>
+<section class="section" id="overview">
+  <h2>Genel Bakış</h2>
+  <p>
+    Amaç: DynamicInvoke olmadan tip güvenliği + sıcak yolda düşük maliyet.
+  </p>
+  <ul>
+    <li>Get&lt;T&gt; / TryGet&lt;T&gt;</li>
+    <li>GetVal / GetString hızlı yol</li>
+    <li>Invoker cache ile performans</li>
+    <li>DDContainer tablo soyutlaması</li>
+  </ul>
+</section>
 
-        <div>
-          <div class="card">
-            <h3>Hızlı Bilgiler</h3>
-            <div class="kv">
-              <div class="k">Repo</div>
-              <div class="v"><a href="https://github.com/DSOpenServer/DSO.Core.MagicBox" target="_blank" rel="noopener">DSO.Core.MagicBox</a></div>
-
-              <div class="k">Model</div>
-              <div class="v"><code>Func&lt;T&gt;</code> hücreleri (zero-arg)</div>
-
-              <div class="k">Okuma</div>
-              <div class="v"><code>Get&lt;T&gt;</code> / <code>TryGet&lt;T&gt;</code> + <code>GetVal</code> / <code>GetString</code></div>
-
-              <div class="k">Tablolar</div>
-              <div class="v"><code>DDContainer</code> → <code>DDTable</code> → <code>DDRow</code></div>
-
-              <div class="k">Lisans</div>
-              <div class="v">MIT</div>
-            </div>
-          </div>
-
-          <div class="card" style="margin-top:12px">
-            <h3>Kurumsal Kimlik</h3>
-            <div class="wordmark" aria-label="DokuzSistem wordmark">
-              <svg viewBox="0 0 420 110" role="img" aria-label="DokuzSistem">
-                <defs>
-                  <linearGradient id="g2" x1="0" x2="1">
-                    <stop offset="0" stop-color="#2b7cff"/>
-                    <stop offset="1" stop-color="#20c997"/>
-                  </linearGradient>
-                </defs>
-                <g>
-                  <path d="M55 18c19 0 34 15 34 34S74 86 55 86 21 71 21 52 36 18 55 18Z" fill="url(#g2)" opacity=".95"/>
-                  <text x="104" y="66" font-family="ui-sans-serif, system-ui" font-size="44" font-weight="780" fill="rgba(255,255,255,.92)">DOKUZ</text>
-                  <text x="252" y="66" font-family="ui-sans-serif, system-ui" font-size="44" font-weight="780" fill="rgba(255,255,255,.92)">Sistem</text>
-                </g>
-              </svg>
-            </div>
-            <div class="hint">İstersen buradaki inline SVG yerine gerçek logo URL’i ile <code>&lt;img&gt;</code> kullanabiliriz.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="overview">
-      <h2>Genel Bakış</h2>
-      <p>
-        MagicBox’ın temel fikri: değerleri doğrudan saklamak yerine <b>değer üreten</b> (lazy) <code>Func&lt;T&gt;</code> hücreleri saklamak.
-        Böylece, tip güvenliği korunurken “hot-path” erişimlerde <b>DynamicInvoke</b> maliyetinden kaçınılır.
-      </p>
-      <ul class="bullets">
-        <li><b>Typed access:</b> <code>Get&lt;T&gt;</code>, <code>TryGet&lt;T&gt;</code></li>
-        <li><b>Generic olmayan erişim:</b> <code>GetVal</code>, <code>GetString</code> (cache ile hızlı yol)</li>
-        <li><b>Tablo soyutlaması:</b> <code>DDContainer</code> içinde tablolara/satırlara ayrılmış model</li>
-      </ul>
-    </section>
-
-    <div class="grid">
-      <section class="section" id="install">
-        <h2>Kurulum</h2>
-        <p>
-          Repo “core” kütüphane mantığında: solution’a proje referansı veya kaynak ekleme ile kullanılabilir.
-        </p>
-        <pre><code>// Proje referansı (önerilen)
-&lt;ItemGroup&gt;
+<section class="section" id="install">
+  <h2>Kurulum</h2>
+<pre><code>&lt;ItemGroup&gt;
   &lt;ProjectReference Include="..\DSO.Core.MagicBox\DSO.Core.MagicBox.csproj" /&gt;
 &lt;/ItemGroup&gt;</code></pre>
-        <pre><code>// Alternatif: kaynakları dahil etme
-// MagicBox.cs ve ilgili dosyaları projenize ekleyin.</code></pre>
-      </section>
+</section>
 
-      <section class="section" id="usage">
-        <h2>Hızlı Başlangıç</h2>
-        <p>
-          Hücre ekleme, tip-güvenli okuma ve “string/object” hızlı yolu:
-        </p>
-        <pre><code>using DSO.Core.MagicBox;
+<section class="section" id="usage">
+  <h2>Hızlı Başlangıç</h2>
+<pre><code>var box = new DMagicBox();
 
-var box = new DMagicBox();
-
-// Ekleme (value veya provider)
 int i = box.Add(42);
 int s = box.Add("Merhaba");
-int g = box.AddFunc(() =&gt; Guid.NewGuid().ToString("N"));
 
-// Tip-güvenli okuma
-int v = box.Get&lt;int&gt;(i);
-if (box.TryGet&lt;string&gt;(s, out var text))
-{
-    // text = "Merhaba"
-}
+int value = box.Get&lt;int&gt;(i);
+string text = box.Get&lt;string&gt;(s);
 
-// Tip belirtmeden okuma (DynamicInvoke yok)
-object any = box.GetVal(g);
-string str = box.GetString(g);
+object any = box.GetVal(i);
+string str = box.GetString(s);</code></pre>
+</section>
 
-// Güncelleme
-box.Set(i, 100);
-box.SetFunc(s, () =&gt; "Daha sonra!");
+<section class="section" id="dd">
+  <h2>DD Modeli</h2>
+  <p>DDContainer birden fazla tablo taşır.</p>
+<pre><code>var db = new DDContainer();
+var table = db.AddTable("People", ColumnBehaviour.StrongType);</code></pre>
+</section>
 
-// Silme / temizleme
-box.RemoveAt(g);
-box.Clear();</code></pre>
-
-        <div class="callout">
-          <strong>Performans önerisi:</strong> Mümkünse <code>Get&lt;T&gt;</code> kullan; gerçekten gerekiyorsa <code>GetVal</code>/<code>GetString</code>’e düş.
-        </div>
-      </section>
-    </div>
-
-    <section class="section" id="dd">
-      <h2>DD Modeli: DDContainer → DDTable → DDRow</h2>
-      <p>
-        MagicBox; hücre konteynerinin üstüne, hafif bir tablo/satır modeli ekler.
-        Böylece birden fazla tabloyu tek bir konteynerde tutabilir, kolon davranışını yönetebilirsiniz.
-      </p>
-      <ul class="bullets">
-        <li><b>DDContainer:</b> Birden fazla tabloyu taşır.</li>
-        <li><b>DDTable:</b> Kolon seti + satır koleksiyonu.</li>
-        <li><b>DDRow:</b> Satır içindeki hücreler (IDBox/handle yaklaşımı).</li>
-      </ul>
-
-      <pre><code>// Şablon örnek (kolon davranışı repo kurgusuna göre değişebilir)
-var db = new DDContainer();
-var table = db.AddTable("People", ColumnBehaviour.StrongType);
-
-// Kolonlar tanımlanır, ardından satırlar eklenir.
-// (Detayları repo içindeki isimlere göre netleştirebiliriz.)</code></pre>
-    </section>
-
-    <section class="section" id="api">
-      <h2>API Özeti</h2>
-      <p>En sık kullanılan fonksiyonların hızlı listesi:</p>
-
-      <pre><code>// Ekleme
-Add&lt;T&gt;(T value)
-AddFunc&lt;T&gt;(Func&lt;T&gt; provider)
-AddDelegate(Delegate d)
-
-// Okuma
+<section class="section" id="api">
+  <h2>API Özeti</h2>
+<pre><code>Add&lt;T&gt;(T value)
 Get&lt;T&gt;(int index)
 TryGet&lt;T&gt;(int index, out T value)
-GetVal(int index)
-TryGetVal(int index, out object value)
-GetString(int index)
-
-// Güncelleme
 Set&lt;T&gt;(int index, T value)
-SetFunc&lt;T&gt;(int index, Func&lt;T&gt; provider)
-SetDelegate(int index, Delegate d)
-
-// Silme / Temizleme
 RemoveAt(int index)
-Remove(IDBox cell)
 Clear()</code></pre>
+</section>
 
-      <div class="callout">
-        <strong>Sınırlama:</strong> Hücreler sadece <code>Func&lt;T&gt;</code> (0 parametre) mantığıyla tasarlanmıştır.
-      </div>
-    </section>
+<div class="footer">
+© <span id="year"></span> DokuzSistem • DSOpenServer
+</div>
 
-    <section class="section" id="contrib">
-      <h2>Katkı (Contributing)</h2>
-      <p>
-        Issue / PR ile katkı yapabilirsiniz. Küçük, odaklı PR’lar ve örnek/test eklemek tercih edilir.
-      </p>
-      <ul class="bullets">
-        <li><b>Issue açın:</b> Bug / performans / yeni özellik önerisi</li>
-        <li><b>PR gönderin:</b> Açıklayıcı commit, örnek kullanım ve mümkünse test</li>
-      </ul>
-      <div class="callout">
-        Zirve için contributor toplamak adına “Good first issue” etiketleri ve küçük görev listesi eklemek çok etkili olur.
-      </div>
-    </section>
+</div>
 
-    <footer>
-      <div class="tag">© <span id="y"></span> DokuzSistem • DSOpenServer</div>
-      <div class="muted2">
-        Repo: <a href="https://github.com/DSOpenServer/DSO.Core.MagicBox" target="_blank" rel="noopener">DSO.Core.MagicBox</a>
-        • Org: <a href="https://github.com/DSOpenServer" target="_blank" rel="noopener">DSOpenServer</a>
-      </div>
-    </footer>
-  </div>
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-  </script>
 </body>
 </html>
